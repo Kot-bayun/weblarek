@@ -31,7 +31,7 @@ export class Cart {
         return this.myProducts.length;
     }
     
-    checkItemById(id: string): IProduct | undefined {
-        return this.myProducts.find(item => item.id === id);
+    checkItemById(id: string): boolean | undefined {
+        return this.myProducts.some(item => item.id === id);
     }
 }

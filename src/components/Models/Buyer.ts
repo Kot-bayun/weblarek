@@ -4,10 +4,10 @@ export class Buyer {
     protected data: IBuyer | null;
 
     constructor() {
-        this.data = null;
+        this.data = {};
     }
     
-    setData(buyer: IBuyer): void {
+    setData(buyer: Partial<IBuyer>): void {
         if(!this.data) {
             this.data = {
                 payment: undefined,
@@ -24,26 +24,23 @@ export class Buyer {
         return this.data;
     }
 
-    cleanData(): IBuyer | null {
-        return this.data = null;
+    cleanData(): void {
+        this.data = {};
     }
     
-    validateData(): {} | undefined {
-        const errors = {
-            payment: 'Не выбран вид оплаты',
-            email: 'Укажите почту',
-            phone: 'Укажите телефон',
-            address: 'Укажите адрес',
-        }
+    validateData(): Record<string, string> | undefined {
+        const errors:Record<string, string> = {};
         
         if (!this.data?.payment) {
-            return errors.payment;
+            errors.payment = 'Не выбран вид оплаты';
         } else if (!this.data?.email) {
-            return errors.email;
+            errors.email = 'Укажите почту';
         } else if (!this.data?.phone) {
-            return errors.phone;    
+            errors.phone = 'Укажите телефон';
         } else if (!this.data?.address) {
-            return errors.address;
+            errors.address = 'Укажите адрес';
         }
+        
+        return errors;
     }   
 }
