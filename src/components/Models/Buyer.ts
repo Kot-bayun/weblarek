@@ -1,9 +1,10 @@
 import { IBuyer } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class Buyer {
     protected data: IBuyer | null;
 
-    constructor() {
+    constructor(protected events: IEvents) {
         this.data = {};
     }
     
@@ -18,6 +19,8 @@ export class Buyer {
         }
     
         Object.assign(this.data, buyer)
+
+        this.events.emit('buyer:changed', buyer);
     }
 
     getData(): IBuyer | null {
@@ -26,9 +29,11 @@ export class Buyer {
 
     cleanData(): void {
         this.data = {};
+
+        this.events.emit('buyer:changed', this.data);
     }
     
-    validateData(): Record<string, string> | undefined {
+    validateData(): Record<string, string> {
         const errors:Record<string, string> = {};
         
         if (!this.data?.payment) {
