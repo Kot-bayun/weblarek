@@ -27,7 +27,7 @@ export class Catalog {
     setItem(item: IProduct): void {
        this.currentProduct = item;
 
-       this.events.emit('item:change', this.currentProduct);
+       this.events.emit('item:change');
     }
 
     getItem(): IProduct | null {

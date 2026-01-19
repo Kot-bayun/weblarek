@@ -2,7 +2,7 @@ import { IBuyer } from '../../types';
 import { IEvents } from '../base/Events';
 
 export class Buyer {
-    protected data: IBuyer | null;
+    protected data: IBuyer;
 
     constructor(protected events: IEvents) {
         this.data = {};
@@ -20,7 +20,7 @@ export class Buyer {
     
         Object.assign(this.data, buyer)
 
-        this.events.emit('buyer:changed', buyer);
+        this.events.emit('buyer:changed');
     }
 
     getData(): IBuyer | null {
@@ -28,9 +28,9 @@ export class Buyer {
     }
 
     cleanData(): void {
-        this.data = {};
+        this.data = {}
 
-        this.events.emit('buyer:changed', this.data);
+        this.events.emit('buyer:changed');
     }
     
     validateData(): Record<string, string> {
@@ -38,11 +38,17 @@ export class Buyer {
         
         if (!this.data?.payment) {
             errors.payment = 'Не выбран вид оплаты';
-        } else if (!this.data?.email) {
+        }
+        
+        if (!this.data?.email) {
             errors.email = 'Укажите почту';
-        } else if (!this.data?.phone) {
+        } 
+        
+        if (!this.data?.phone) {
             errors.phone = 'Укажите телефон';
-        } else if (!this.data?.address) {
+        }
+        
+        if (!this.data?.address) {
             errors.address = 'Укажите адрес';
         }
         

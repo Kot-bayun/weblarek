@@ -39,4 +39,8 @@ export class Order extends Form<TFormOrder> {
     set address(value: string) {
         this.addressElement.textContent = String(value);
     }
+
+    resetOrderForm(): void {
+        this.addressElement.value = '';
+    }
 }

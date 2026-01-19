@@ -31,4 +31,9 @@ export class Contacts extends Form<TFormOrder> {
     set phone(value: string) {
         this.emailElement.textContent = String(value);
     }
+
+    resetContactsForm(): void {
+        this.emailElement.value = '';
+        this.phoneElement.value = '';
+    }
 }

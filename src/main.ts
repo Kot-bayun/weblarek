@@ -85,14 +85,14 @@ events.on('item:selected', (item: IProduct) => {
 })
 
 // Подписываемся на событие, когда карточка изменилась
-events.on('item:change', (current: IProduct) => {
-  modal.render( { content: cardPreview.render({ ...current, image: CDN_URL + current.image }) });
+events.on('item:change', () => {
+  const current = firstCatalog.getItem();
 
-  modal.open();
+  modal.render( { content: cardPreview.render({ ...current, image: CDN_URL + current?.image }) });
 
   const itemInBasket = firstCart.checkItemById(current.id);
 
-  if(!current.price) {
+  if(!current?.price) {
     cardPreview.buttonText = 'Недоступно';
     cardPreview.buttonState = true;
   } else if(itemInBasket) {
@@ -102,6 +102,8 @@ events.on('item:change', (current: IProduct) => {
     cardPreview.buttonText = 'Купить';
     cardPreview.buttonState = false;
   }
+
+  modal.open();
 })
 
 // Получаем изменившуюся корзину по подписке
@@ -143,17 +145,17 @@ events.on('form:change', (data: { field: keyof IBuyer, value: string}) => {
 })
 
 // Подписываемся на событие, когда покупатель изменился
-events.on('buyer:changed', (data: Partial<IBuyer>) => {
+events.on('buyer:changed', () => {
   const buyerData = firstBuyer.getData();
   const { payment, address, email, phone } = firstBuyer.validateData();
 
-  if('payment' in data || 'address' in data) {
+  if('payment' in buyerData || 'address' in buyerData) {
     orderForm.render({ payment: buyerData?.payment, address: buyerData?.address ?? '', errors: Object.values( { payment, address } ).filter(Boolean).join(', ') })
     
     orderForm.valid = !payment && !address;
   }
 
-  if('email' in data || 'phone' in data) {
+  if('email' in buyerData || 'phone' in buyerData) {
     contactsForm.render({ email: buyerData?.email, phone: buyerData?.phone, errors: Object.values( { email, phone } ).filter(Boolean).join(', ') })
     
     contactsForm.valid = !email && !phone;
@@ -193,14 +195,16 @@ events.on('contacts:submit', () => {
 
   firstCart.cleanCart();
   firstBuyer.cleanData();
+  orderForm.resetOrderForm();
+  contactsForm.resetContactsForm();
   })
   .catch((error) => {
     console.log('Ошибка при отправке заказа:', error);
   })
 })
 
-// Подписываемся на событие, когда модальное окно закрывается
-events.on('modal:close', () => {
+// Подписываемся на событие, когда модальное окно c контентом Success закрывается
+events.on('success:click', () => {
   modal.close();
 })
 
